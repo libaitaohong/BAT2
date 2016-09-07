@@ -8,7 +8,8 @@ import java.util.ArrayList;
  * 首先将树序列化，并使用KMP算法判断一个字符串中是否包含另外一个
  * A和B是两棵树的头结点
  * 使用string代替ArrayList
- * 运行时间35ms，大小583k，都比使用数组链表小
+ * 运行时间43ms，大小728k
+ * 改错，getNextArray函数中第一个if条件写错，导致整个next数组除了next[0]=-1外，其余全=0
  */
 /*
 public class TreeNode {
@@ -77,9 +78,9 @@ public class IdenticalTree {
         next[0] = -1;
         next[1] = 0;
         int pos = 2; //当前需要计算值的位置
-        int cn = 0; //cn是pos前一个位置的最长相同前缀的后一位
+        int cn = 0; //cn是pos前一个位置的最长相同前缀的后一位,是下标
         while(pos < strB.length){ //注意下标与长度的关系，最多到length-1
-            if (next[pos] == cn){
+            if (strB[pos-1] == strB[cn]){
                 next[pos++] = ++cn;
             }else if (cn > 0){
                 cn = next[cn];
