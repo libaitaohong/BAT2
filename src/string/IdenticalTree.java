@@ -7,7 +7,8 @@ import java.util.ArrayList;
  * 检查A中是否存在一棵子树与B树的拓扑结构完全相同。
  * 首先将树序列化，并使用KMP算法判断一个字符串中是否包含另外一个
  * A和B是两棵树的头结点
- * 运行时间37ms，大小709k
+ * 使用string代替ArrayList
+ * 运行时间35ms，大小583k，都比使用数组链表小
  */
 /*
 public class TreeNode {
@@ -20,29 +21,25 @@ public class TreeNode {
 }*/
 public class IdenticalTree {
     public boolean chkIdentical(TreeNode A, TreeNode B) {
-        ArrayList<String> treeA = new ArrayList<String>();
-        ArrayList<String> treeB = new ArrayList<String>();
-        //树变成数组列表
+        //ArrayList<String> treeA = new ArrayList<String>();
+        //ArrayList<String> treeB = new ArrayList<String>();
+        StringBuilder  treeA = new StringBuilder();
+        StringBuilder  treeB = new StringBuilder();
+        //树变成StringBuilder
         if (A != null && B != null){
             treeToArray(A, treeA);
             treeToArray(B, treeB);
         }
-        //数组列表转换为数组
-        String[] strA = new String[treeA.size()];
-        String[] strB = new String[treeB.size()];
-        for (int i = 0,j = treeA.size(); i < j; i++ ){
-            strA[i] = treeA.get(i);
-        }
-        for (int i = 0,j = treeB.size(); i < j; i++ ){
-            strB[i] = treeB.get(i);
-        }
-       ///构建next数组
+        //stringBuilder转换为char数组
+        char[] strA = treeA.toString().toCharArray();
+        char[] strB = treeB.toString().toCharArray();
+       //构建next数组
         int[] next = getNextArray(strB);
         //匹配
         int ai = 0; //ai bi对应strA与strB当前位置
         int bi = 0;
         while (ai < strA.length && bi < strB.length){
-            if (strA[ai].equals(strB[bi])){
+            if (strA[ai] == strB[bi]){
                 ai++;
                 bi++;
             }else if (next[bi] >= 0){
@@ -57,22 +54,22 @@ public class IdenticalTree {
         return false;
     }
     //递归调用将树变成数组列表，采用中序遍历
-    private void treeToArray(TreeNode t,  ArrayList<String> a){
+    private void treeToArray(TreeNode t,  StringBuilder a){
         String val = t.val + "";
-        a.add(val);
+        a.append(val);
         if (t.left != null){
             treeToArray(t.left, a);
         }else{
-            a.add("#");
+            a.append("#");
         }
         if (t.right != null){
             treeToArray(t.right, a);
         }else{
-            a.add("#");
+            a.append("#");
         }
     }
 
-    private int[] getNextArray(String[] strB){
+    private int[] getNextArray(char[] strB){
         if (strB.length == 1){
             return new int[]{-1};
         }
