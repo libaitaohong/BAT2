@@ -14,8 +14,10 @@ import java.util.Stack;
  * 给定一个无重复元素的数组A和它的大小n，请返回一个数组，
  * 其中每个元素为原数组中对应位置元素在树中的父亲节点的编号，若为根则值为-1。
  * 测试样例：[3,1,4,2],4   返回：[2,0,-1,2]
- * 版本:1
- * 运行时间:151 ms	2034K
+ * 版本:2
+ * 改动：之前用了2个for循环来分别求左边与右边第一个比当前位置大的数。
+ * 但是：当压栈时，栈顶元素为左边第一个比他大的数，出栈时，等待压栈为右边第一个比他大数，用一次for循环即可。
+ * 运行时间:143 ms	1989K
  * 备注:
 */
 public class MaxTree {
@@ -23,23 +25,17 @@ public class MaxTree {
         Stack<Integer> max = new Stack<>();
         int[] arr = new int[n];
         for (int i = 0; i < n; i++){
-            while(!max.empty() && A[i] > A[max.peek()])
+            while(!max.empty() && A[i] > A[max.peek()]) {
+                if (arr[max.peek()] == -1)
+                    arr[max.peek()] = i;
+                else if (A[arr[max.peek()]] > A[i])
+                    arr[max.peek()] = i;
                 max.pop();
+            }
             if (max.empty()){
                 arr[i] = -1;
             } else {
                 arr[i] = max.peek();
-            }
-            max.push(i);
-        }
-        for (int i = n-1; i >= 0; i--){
-            while(!max.empty() && A[i] >A[max.peek()])
-                max.pop();
-            if (!max.empty() && A[i] < A[max.peek()]){
-                if (arr[i] == -1)
-                    arr[i] = max.peek();
-                else if (A[arr[i]] > A[max.peek()])
-                    arr[i] = max.peek();
             }
             max.push(i);
         }
