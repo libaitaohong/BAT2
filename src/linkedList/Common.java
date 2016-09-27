@@ -1,5 +1,7 @@
 package linkedList;
 
+import java.util.LinkedList;
+
 /**
  * 工程: BAT2 包名: linkedList 类名: Common
  * 作者: zhanghe
@@ -9,33 +11,32 @@ package linkedList;
  * 给定两个链表的头指针headA和headB，请返回一个vector，元素为两个链表的公共部分。
  * 请保证返回数组的升序。两个链表的元素个数均小于等于500。保证一定有公共值
  * 测试样例：{1,2,3,4,5,6,7},{2,4,6,8,10} 返回：[2.4.6]
- * 版本:
- * 运行时间:
- * 备注:注意i是数组part的个数，不是最后一位的下标
- * 且，注意开始数组part为500位，最后需要截取有效位
- */
+ * 版本:2
+ * 运行时间:94 ms	1976K
+ * 备注:取消数组，使用链表。另外不用新建两个节点指向链表，直接使用链表的头结点即可
+ * 在最后进行for循环时，链表的大小一直在改变，所以不能用链表大小与j比较
+ * */
 public class Common {
     public int[] findCommonParts(ListNode headA, ListNode headB) {
         if (headA == null || headB == null)
             return new int[] {-1};
-        ListNode aa = headA;
-        ListNode bb = headB;
-        int[] part = new int[500];
-        int i = 0;
-        while(aa != null && bb != null){
-            if (aa.val == bb.val){
-                part[i] = aa.val;
-                i++;
-                aa = aa.next;
-                bb = bb.next;
-            }else if (aa.val > bb.val)
-                bb = bb.next;
+
+        LinkedList<Integer> part = new LinkedList<>();
+        while(headA != null && headB != null){
+            if (headA.val == headB.val){
+                part.add(headA.val);
+                headA = headA.next;
+                headB = headB.next;
+            }else if (headA.val > headB.val)
+                headB = headB.next;
             else
-                aa = aa.next;
+                headA = headA.next;
         }
-        int[] finapart = new int[i];
-        for (int j = 0; j < i; j++)
-            finapart[j] = part[j];
+        int[] finapart = new int[part.size()];
+        int k = part.size();
+        for (int j = 0; j < k; j++){
+            finapart[j] = part.pollFirst();
+        }
         return finapart;
     }
 }
